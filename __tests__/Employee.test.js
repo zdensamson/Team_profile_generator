@@ -1,6 +1,6 @@
-const { expect, test } = require('@jest/globals');
-const exp = require('constants');
-const expectExport = require('expect');
+// const { expect, test } = require('@jest/globals');
+// const exp = require('constants');
+// const expectExport = require('expect');
 const Employee = require('../lib/Employee');
 
 test('creates an employee object', ()=> {
