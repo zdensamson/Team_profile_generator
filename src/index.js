@@ -146,4 +146,4 @@ EmpData.prototype.empQuestion = function(empType) {
          })
  }
 
-new EmpData().startQuestion();
+ new EmpData().startQuestion();
