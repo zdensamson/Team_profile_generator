@@ -2,7 +2,8 @@ const inquirer = require('inquirer');
 const Manager = require('../lib/Manager');
 const Engineer = require('../lib/Engineer');
 const Intern = require('../lib/Intern');
-const Employee = require('../lib/Employee');
+const fs = require('fs');
+const generatePage = require('./page-template');
 
 const managerQuestions = [
     {
@@ -104,42 +105,45 @@ EmpData.prototype.startQuestion = function() {
         
             this.empQuestion(addEmp);
         });
+};
 
 EmpData.prototype.empQuestion = function(empType) {
-   switch (empType){
-       case 'Engineer':
-           this.engQuestion();
-           break;
-        case 'Intern':
-            this.intQuestion();
+    switch (empType){
+        case 'Engineer':
+            this.engQuestion();
             break;
-        case 'I don\'t want to add any more team members':
-            console.log(this.manager);
-            console.log(this.engineers);
-            console.log(this.interns);
-   }
-}
+         case 'Intern':
+             this.intQuestion();
+             break;
+         case 'I don\'t want to add any more team members':
+            const pageHTML = generatePage(this);
+            
+            fs.writeFile('../index.html', pageHTML, err => {
+                if (err) throw new Error(err);
+                console.log('PAGE CREATED');
+            })
 
-EmpData.prototype.engQuestion = function() {
-    inquirer
-        .prompt(engineerQuestions)
-        .then(({name, id, email, github, addEmp}) => {
-            this.engineers.push(new Engineer(name, id, email, github));
-    
-            this.empQuestion(addEmp);
-        });
-};
-
-EmpData.prototype.intQuestion = function() {
-    inquirer
-        .prompt(internQuestions)
-        .then(({name, id, email, school, addEmp}) => {
-            this.interns.push(new Intern(name, id, email, school));
-
-            this.empQuestion(addEmp);
-        })
-}
-
-};
+    }
+ }
+ 
+ EmpData.prototype.engQuestion = function() {
+     inquirer
+         .prompt(engineerQuestions)
+         .then(({name, id, email, github, addEmp}) => {
+             this.engineers.push(new Engineer(name, id, email, github));
+     
+             this.empQuestion(addEmp);
+         });
+ };
+ 
+ EmpData.prototype.intQuestion = function() {
+     inquirer
+         .prompt(internQuestions)
+         .then(({name, id, email, school, addEmp}) => {
+             this.interns.push(new Intern(name, id, email, school));
+ 
+             this.empQuestion(addEmp);
+         })
+ }
 
 new EmpData().startQuestion();
